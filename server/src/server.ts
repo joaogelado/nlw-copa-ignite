@@ -1,9 +1,14 @@
 import Fastify from "fastify";
+import cors from "@fastify/cors";
 import { prisma } from "./lib/prisma";
 
 async function main() {
     const server = Fastify({
         logger: true,
+    });
+
+    await server.register(cors, {
+        origin: true,
     });
 
     server.get("/polls/count", async (request, reply) => {
@@ -12,7 +17,7 @@ async function main() {
         return { count: polls };
     });
 
-    await server.listen({ port: 3333 });
+    await server.listen({ port: 3333, host: "0.0.0.0" });
 }
 
 main();
