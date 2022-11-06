@@ -5,9 +5,9 @@ generator client {
   provider = "prisma-client-js"
 }
 
-generator erd {
-  provider = "prisma-erd-generator"
-}
+// generator erd {
+//   provider = "prisma-erd-generator"
+// }
 
 datasource db {
   provider = "sqlite"
@@ -20,5 +20,61 @@ model Poll {
   code      String   @unique
   createdAt DateTime @default(now())
 
-  @@map("polls")
+  createdByUserId String?
+
+  createdBy    User?         @relation(fields: [createdByUserId], references: [id])
+  participants Participant[]
+}
+
+model Participant {
+  id String @id @default(cuid())
+
+  pollId String
+  userId String
+
+  user    User    @relation(fields: [userId], references: [id])
+  poll    Poll    @relation(fields: [pollId], references: [id])
+  guesses Guess[]
+
+  @@unique([userId, pollId])
+}
+
+model User {
+  id String @id @default(cuid())
+
+  name      String
+  email     String   @unique
+  googleId  String?  @unique
+  avatarUrl String?
+  createdAt DateTime @default(now())
+
+  participatingAt Participant[]
+  createdPolls    Poll[]
+}
+
+model Game {
+  id String @id @default(cuid())
+
+  firstTeamCountryCode  String
+  secondTeamCountryCode String
+
+  date    DateTime @default(now())
+  guesses Guess[]
+}
+
+model Guess {
+  id String @id @default(cuid())
+
+  firstTeamGuessedPoints  Int
+  secondTeamGuessedPoints Int
+
+  createdAt DateTime @default(now())
+
+  gameId        String
+  participantId String
+
+  issuedBy Participant @relation(fields: [participantId], references: [id])
+  game     Game        @relation(fields: [gameId], references: [id])
+
+  @@unique([gameId, participantId])
 }

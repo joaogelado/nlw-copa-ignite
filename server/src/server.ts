@@ -1,23 +1,49 @@
 import Fastify from "fastify";
+
 import cors from "@fastify/cors";
-import { prisma } from "./lib/prisma";
+import env from "@fastify/env";
+import jwt from "@fastify/jwt";
+
+import { pollRoutes } from "./routes/poll";
+import { gameRoutes } from "./routes/game";
+import { guessRoutes } from "./routes/guess";
+import { authRoutes } from "./routes/auth";
+import { userRoutes } from "./routes/user";
 
 async function main() {
-    const server = Fastify({
+    const instance = Fastify({
         logger: true,
     });
 
-    await server.register(cors, {
+    await instance.register(cors, {
         origin: true,
     });
 
-    server.get("/polls/count", async (request, reply) => {
-        const polls = await prisma.poll.count();
-
-        return { count: polls };
+    await instance.register(env, {
+        schema: {
+            type: "object",
+            required: ["JWT_SIGNATURE"],
+            properties: {
+                JWT_SIGNATURE: {
+                    type: "string",
+                },
+            },
+        },
+        dotenv: true,
     });
 
-    await server.listen({ port: 3333, host: "0.0.0.0" });
+    await instance.register(jwt, {
+        secret: process.env.JWT_SIGNATURE as string,
+    });
+
+    await instance.register(pollRoutes);
+    await instance.register(guessRoutes);
+    await instance.register(gameRoutes);
+
+    await instance.register(userRoutes);
+    await instance.register(authRoutes);
+
+    await instance.listen({ port: 3333, host: "0.0.0.0" });
 }
 
 main();
