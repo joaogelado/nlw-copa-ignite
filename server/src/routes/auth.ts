@@ -58,10 +58,11 @@ export async function authRoutes(instance: FastifyInstance) {
         return {
             success: true,
             data: {
+                user:{
                 email,
                 name,
                 picture,
-                id,
+                id,},
                 token,
             },
         };
