@@ -27,8 +27,10 @@ O projeto consiste em uma aplicação de "bolões descentralizados", onde cada u
 -   [x] Aula 05 - Finalizando o app e funcionalidades + próximos passos
 
 ## Próximos passos:
-- [ ] Login na web
-- [ ] Armazenar token no mobile (persistir quando reiniciar aplicação)
-- [ ] Implemenar melhor error handling e mensagens de erro no server
-- [ ] Fazer com que, quanto edite um, não altere todos os palpites ao mesmo tempo no mobile
-- [ ] Adicionar histórico
+
+-   [ ] Login na web
+-   [ ] Armazenar token no mobile (persistir quando reiniciar aplicação)
+-   [ ] Implemenar melhor error handling e mensagens de erro no server
+-   [ ] Fazer com que, quanto edite um, não altere todos os palpites ao mesmo tempo no mobile
+-   [ ] Adicionar histórico
+-   [ ] Fazer testes com o vitest (backend)
